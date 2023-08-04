@@ -22,8 +22,9 @@ async function runAutomationScript() {
     }
 
     // Test case 2 and 3
-    for (const category of mainCategories) {
-      await driver.actions().move({ origin: category }).perform();
+    for (let i = 0; i < mainCategories.length; i++) {
+      const category = await mainMenu.findElements(By.css('.nav-a')); // Find the element again
+      await driver.actions().move({ origin: category[i] }).perform();
       await driver.sleep(1000); // Wait for submenus to appear
       const subcategories = await driver.findElements(By.css('.nav-hasPanel .nav-panel .nav-item'));
       for (const subcategory of subcategories) {
@@ -35,7 +36,8 @@ async function runAutomationScript() {
 
     // Test case 4
     for (const subcategory of mainCategories) {
-      await subcategory.click();
+      const subcategoryLink = await mainMenu.findElements(By.css('.nav-a')); // Find the element again
+      await subcategoryLink[mainCategories.indexOf(subcategory)].click();
       await driver.wait(until.urlContains('https://www.amazon.com/'), 5000);
       await driver.navigate().back();
     }
